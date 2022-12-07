@@ -114,3 +114,40 @@ views.py:
 `def index(request):
    return HttpResponse("welcome!")
    `
+<b>СОЗДАНИЕ МОДЕЛИ</b>
+
+1. заходим в models.py
+2. модель - это класс без init и тд, аналогично sqlalchemy во Flask
+
+`Class Post(models.Model):
+  text = models.TextField()`
+нужно отнаследоваться от класса models.Model
+
+3. Готовим к миграции
+
+в консоли пишем:
+`python manage.py makemigrations my_app`
+лучше указывать название приложения, т.к. приложений может быть очень много
+
+4. регистрируем модель в my_app/admin.py - чтобы был доступ к модели из админки в браузере
+пишем
+`from .models import Post`
+а потом
+`admin.site.register(Post)
+
+5. Преобразовываем модель (в models.py)
+
+`Class Post(models.Model):
+  title = models.CharField(max_length=20, default="no name")
+  text = models.TextField()
+  и тут же прописываем вот эту штуку:
+  def __str__(self):
+    return self.title`
+метод __str__ - будет возвращать то что как бы на print
+
+6. и не забываем сделать миграцию
+`python manage.py makemigrations my_app`
+
+7. Теперь правим вид страницы. Идем в my_app/views.py
+
+а дальше все в файлах проекта
