@@ -153,3 +153,63 @@ server {
 
 34. ctrl+c
 
+УСТАНОВКА ФАЕРВОЛА
+
+1. `sudo apt-get install ufw -y`
+2. `sudo ufw default deny incoming` - запрет входящих подключений к серверу
+3. `sudo ufw default allow outgoing`
+4. `sudo ufw allow ssh` - добавляем в ислючения все нужные порты
+
+`sudo ufw allow 'Nginx Full'`
+
+`sudo ufw allow http`
+
+`sudo ufw allow 5050`
+
+`sudo ufw allow 22`
+
+`sudo ufw allow 3000`
+
+5. проверяем статус фаервола
+
+`sudo ufw status verbose` - статус неактивен
+
+6. делаем его активным
+
+`sudo ufw enable`
+
+7. смотрим все исключения
+
+`sudo ufw status`
+
+УСТАНОВКА СЕРВЕРНОГО ЯЗЫКА
+PYTHON
+`sudo apt-get install python3 python3-dev`
+
+проверяем версию python
+`python3 --version`
+
+устанавливаем pip
+`sudo apt install python3-pip`
+
+проверяем версию pip
+`pip3 --version`
+
+устанавливаем git
+`sudo apt-get install git`
+
+проверяем версию git
+`git --version`
+
+устанавливаем sqlite3
+`sudo apt install sqlite3`
+
+для мониторинга всех процессов системы нам понадобится програм htop
+
+`sudo apt install htop`
+
+чтобы посмотреть все процессы пишем 
+`htop`
+
+чтобы выйти ctrl+c
+
