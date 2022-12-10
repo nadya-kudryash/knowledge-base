@@ -1,0 +1,61 @@
+1. Nginx:
+установка                                  || sudo apt install nginx
+запустить Nginx                            || sudo systemctl start nginx
+остановить Nginx                           || sudo systemctl stop nginx
+перезагрузить Nginx                        || sudo systemctl reload nginx
+запуск Nginx при каждой загрузки  системы  || sudo systemctl enable nginx
+проверить статус                           || sudo systemctl status nginx
+
+2. UFW
+Установка                                  || apt-get install ufw -y
+правила по умолчанию  
+                                           || sudo ufw default deny incoming
+                                           || sudo ufw default allow outgoing
+добавление правила                         || sudo ufw allow 3000
+проверить статус UFW                       || sudo ufw status verbose
+проверить статус с номером для удаления    || sudo ufw status numbered
+удалить правило с номером 2                || sudo ufw delete 2
+удалить правило по названию                || sudo ufw delete allow http
+активировать фаерфолл                      || sudo ufw enable
+отключение фаерволла                       || sudo ufw disable
+сбросить все правила                       || sudo ufw reset
+
+3. Postgres 
+переключиться на пользователя postgres     || sudo -i -u postgres
+войти в консоль postgres                   || psql
+выйти из консоли postgres                  || \q
+создать другую базу данных                 || createdb demo
+подключиться к другой базе данных          || psql -d demo
+посомтреть все таблицы в БД                || \dt 
+посомтреть все БД                          || \l
+получить список доступных ролей            || \du
+создать новую роль                         || CREATE ROLE new_role_name;
+создать нового пользователя                || createuser test_user
+изменить роль для пользователя             || ALTER ROLE demo_role WITH NOLOGIN;
+
+4. MongoDB
+проверка состояния службы                  || sudo systemctl status mongodb
+остановить mongodb                         || sudo systemctl stop mongodb
+запустить mongodb                          || sudo systemctl start mongodb
+создать БД                                 || use testdb
+переключиться на другую БД                 || use testdb
+посмотреть текущую БД                      || db
+посмотреть все коллекции в БД              || show collections
+вставить запись в коллекцию                || db.mycollection.insert({"name" : "Mark"})
+посмотреть запись из коллекции             || db.mycollection.find()
+
+
+4. Другое
+посмотреть запущенные процессы             || htop
+посмотреть все процессы                    || ps -ef
+Посмотреть все запущенные процессы 
+в системе, которые занимают больше 
+всего ресурсов                             || top
+посмотреть свободную память                || free -m 
+посмотреть свободное место она диске       || df -h --total 
+посмотреть свой public key                 || cat ~/.ssh/id_rsa.pub
+
+
+
+
+

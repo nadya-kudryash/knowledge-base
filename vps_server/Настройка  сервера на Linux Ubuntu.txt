@@ -1,0 +1,376 @@
+1. Зайти на сервер под логином и паролем
+ssh root@SERVER_IP_ADDRESS
+
+2. Очистить кэш репозиториев и сделать обновление системы
+sudo apt clean all && sudo apt update && sudo apt dist-upgrade
+
+3. Ввести пароль для пользователя
+
+4. Появится надпись с соглашением на аутентификацию. Согласиться
+
+5. Создать нового пользователя
+adduser demo
+
+6. Задать надежный пароль для пользователя
+
+7. Присвоить пользователю все права и добавить его в группу sudo
+gpasswd -a demo sudo
+
+8.Переключитесь на созданного ранее пользователя
+su - demo
+
+9. Вы находитесь в домашней директории нового пользователя.
+Создайте папку .ssh
+mkdir .ssh
+
+10. Ограничьте права на доступ к ней
+chmod 700 .ssh
+
+11. Посмотреть выбранный порт в используемых портах системы. Если используется, то придумать другой
+grep -w 80 /etc/services
+
+12. Создайте и откройте файл authorized_keys в текстовом редакторе. Будет предложено ввести пароль. Вводим
+nano .ssh/authorized_keys
+
+13. Добавление авторизации по публичному ключу:
+
+Создание пары ключей на ЛОКАЛЬНОЙ МАШИНЕ
+ssh-keygen
+Выбирете место на диске, куда сохранить ключ
+
+14. После создания ключая, нужно его получить, вставляем в консоль ЛОКАЛЬНОЙ МАШИНЫ
+cat ~/.ssh/id_rsa.pub
+
+15. Скопировать ключ из ЛОКАЛЬНОЙ МАШИНЫ в консоль УДАЛЕННОЙ МАШИНЫ
+
+16. Теперь ограничьте права на доступ к файлу authorized_keys при помощи следующей команды:
+chmod 600 .ssh/authorized_keys
+
+17. Выполните команду для возврата к пользователю root
+exit
+
+18. Откройте конфигурационный файл sshd_config
+nano /etc/ssh/sshd_config
+
+19. Замените порт 22 на любой другой 4-ых значный, после 1024(это порты для системных программ)
+
+20. Находим следующую строчку
+PermitRootLogin yes
+Заменить на no (запрещаем вход на сервер под админом root)
+
+21. (Рекомендуется) Находим строчку
+PasswordAuthentication yes
+Изменяем на no (запрет входа на сервер используя пароль)
+
+22. Сохранить и закрыть файл
+
+23. Сделать перезапуск сервиса ssh 
+service ssh restart
+
+24. Отключение постоянного запроса пароля для пользователя
+nano /etc/sudoers
+Добавить строку внизу:
+boss ALL=(ALL) NOPASSWD: ALL
+
+25. Установить nginx
+sudo apt install nginx
+
+26. Проверить статус nginx
+sudo systemctl status nginx
+
+27. Сделать автозагрузку Nginx при старте системы
+sudo systemctl enable nginx
+
+28. Создадим сайт для проверки:
+Создать в домашней директории папку с проектами, например webapps. Если вы единственный пользователь
+создавайте в домашней директории, если же много пользователей, то в cd /srv
+cd /home/boss
+mkdir webapps
+
+29. Перейти в папку webapps и создать папку с сайтом:
+cd webapps
+mkdir mysite.com 
+
+30. Проверить наличие папки
+ls
+
+31. Задать папке права на запись и чтение
+sudo chmod -R 777 /home/boss/webapps
+
+32. Перейти в папку нашего сайта
+cd mysite.com
+
+33. создать файл index.html
+sudo nano index.html
+
+34.Вставить дефолтную структуру для проверки
+<html>
+    <head>
+        <title>Home</title>
+    </head>
+    <body>
+        <h1 style="color:green; text-align:center; margin-top: 5em;">This is your First Website</h1>
+    </body>
+</html>
+
+35. Сохранить и закрыть файл
+
+36. Чтобы nginx обслуживал наше приложение добавляем файл конфига нашего сайта для nginx
+sudo nano  /etc/nginx/sites-available/mysite.com
+
+server {
+    listen 80.249.145.36:80;
+    root /home/boss/webapps/mysite.com;
+    index index.html;
+    location / {
+         try_files $uri.html $uri $uri/ =404;
+    }
+}
+
+37. Сохранить и закрыть файл
+
+38. Активировать файл и создать для него симлинк в директорию sites-enabled
+sudo ln -s /etc/nginx/sites-available/example.com /etc/nginx/sites-enabled/example.com
+
+39. Проверить,что нет никаких ошибок в наших файлах. 
+sudo nginx -t
+
+40. Перезапустить сервис nginx
+sudo systemctl restart nginx
+
+41. Проверить статус Nginx
+sudo systemctl status nginx
+
+42. В адресной строке вбить ip адрес нашего сайта(или доменное имя) и проверить работоспособность
+
+43. Установить фаерволл UFW
+sudo apt-get install ufw -y
+
+
+44. Сделаем  правила по умолчанию
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
+45. Добавить в проверенные порты все необходимые порты
+sudo ufw allow ssh
+sudo ufw allow 'Nginx Full'
+sudo ufw allow http
+sudo ufw allow 22
+sudo ufw allow 5555(порт который изменили в конфиг файле ssh)
+sudo ufw allow 3000
+sudo ufw allow from 203.0.113.4
+
+46. Проверить статус ufw
+sudo ufw status verbose
+
+47. Активировать фаерволл
+sudo ufw enable
+
+48. Снова проверить статус фаерволла
+sudo ufw status
+
+49. Ещё раз запустить наш сайт для проверки
+
+50. Установить node js и npm 
+
+  50.1. Проверить версию Node Js.
+  node -v  
+
+  50.2. Проверить версию node.js. Если после апгрейда версия программы не изменилась,
+  то сделать следующее:
+
+  50.3. Зайти на сайти Node.js и перейти на вкладку other downloads
+
+  50.4. Зайти в installing NOde js via pavkage manager(внизу)
+
+  50.5. Кликнуть на Debian and Ubuntu Linux DEstributions
+
+  50.6. Кликнуть на линк Node.js binary distributions
+
+  50.7. Скопировать линки для выбранной версии Node.js снизу страницы гитхаба и выполнить в терминале
+
+  50.8. Проверить версию Node js
+  node -v
+
+  50.9. sudo npm install -g npm@latest
+
+
+51. установить git
+sudo apt-get install git
+
+52. Проверить версию git
+git --version
+
+53. Установка и настройка Postgres:
+sudo apt install postgresql postgresql-contrib
+
+  53.1. Сделать автозагрузку postgres при старте сервера
+  sudo update-rc.d postgresql enable
+
+  53.2. Проверить статус postgres
+  service postgresql status
+
+  53.3. Проверить версию postgres, если старая, то установить более свежую версию
+  psql -V
+
+  53.4. Переключиться на пользователя , созданного по дефолту Postgres и войти в консоль. 
+  sudo -u postgres psql  
+
+  53.5. Создать нового пользователя
+  CREATE USER newuser;
+
+  53.6. Посмотреть всех пользователей
+  \du
+
+  53.7. Наделить нвого пользователя правами админа
+  ALTER USER myuser WITH SUPERUSER;
+
+  53.8. Снова посмотреть список пользователей
+  \du  
+
+  53.9. Посмотреть все базы данных
+  \l
+
+  53.10. Создать новую БД
+  CREATE DATABASE testdb;
+
+  53.11. Изменить собственника БД 
+   ALTER DATABASE testdb OWNER TO newuser;
+
+  53.12. Подключиться к другой базе данных можно
+  psql testdb
+
+  53.13. Создать таблицу для проверки
+
+  CREATE TABLE managers (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR ( 150 ) NOT NULL,
+	email VARCHAR ( 255 ) UNIQUE NOT NULL,
+    age INTEGER NOT NULL
+  );
+
+  53.14. Чтобы посмотреть все таблицы в БД
+  \dt
+
+  53.15. Добавить в таблицу несколько записей:
+  INSERT INTO managers (name, email, age) VALUES ('John Sohman', 'john@gmail.com', 27);
+  INSERT INTO managers (name, email, age) VALUES ('Margaret Visbis', 'margaret@yahoo.com', 36);
+  INSERT INTO managers (name, email, age) VALUES ('Denis Solodov', 'denis@mail.ru', 32);
+  INSERT INTO managers (name, email, age) VALUES ('Louise Vandergoof', 'louise@gmail.com', 24);
+
+  53.16. Получаем все записи из БД
+  SELECT * FROM managers;
+
+  53.17. Выйти из базы данных
+  \q
+
+54. Установить MongoDB
+
+  54.1. установить саму программу
+  sudo apt install -y mongodb
+
+  54.2. Обновить список пакетов
+  sudo apt-get update
+
+  54.3. Автостарт mongo db при загрузке системы
+  sudo systemctl enable mongodb.service
+
+  54.4. Проверяем состояние службы mongodb 
+  sudo systemctl status mongodb
+
+  54.5. Если нет соеденения, то вводим команду. Значение 1 поля ok в ответе означает, что сервер работает нормально.
+  sudo service mongodb start
+
+  54.6. Добавить правило в ufw, чтобы был доступ к порту mongodb
+  sudo ufw allow 27017
+
+  54.7. Проверяем,что mongo db добавлена в ufw
+  sudo ufw status
+  
+  54.8. Mongodb прослушивает только локальный адрес 127.0.0.1 Нужно добавить наш сервер в конфиг файл Mongodb
+  Откройте файл конфигурации
+  sudo nano /etc/mongodb.conf
+
+  54.9. Добавьте IP-адрес вашего сервера в значение bindIP
+  bind_ip = 127.0.0.1,your_server_ip
+
+  54.10. Сохранить и закрыть файл
+
+  54.11. Перезапустить службу mongodb
+  sudo systemctl restart mongodb
+
+  54.12. Проверяем состояние службы mongodb 
+  sudo systemctl status mongodb
+
+  54.12. войти в сервис mongodb
+  mongo 
+
+  54.13. Смотрим все доступные базы данных
+  show dbs
+
+  54.14. Создаем новую базу данных. После создания бд будет автоматическое подключение к ней
+  use testdb
+
+  54.15. Вставляем первую коллекцию. db - название базы данных
+  db.mycollection.insert({"name" : "Mark"})
+
+  54.16. Смотрим все коллекции в БД 
+  show collections
+
+  54.17. Смотрим запись из коллекции
+  db.mycollection.find()
+
+55. Проверить установлена ли sqlite3
+sqlite3
+
+56. Установить sqlite3, если нет
+sudo apt-get install sqlite3
+
+57. Обновить пакеты программы:
+sudo apt-get update
+
+58. Проверяем версию sqlite3
+sqlite3 --version
+
+59. Установить Htop
+sudo apt install htop
+
+60. Просмотреть запущенные процессы
+htop
+
+61. Установить Filezilla
+
+62. Установить Putty
+
+63.Открыть  putty gen 
+
+64. Загрузить файл id_rsa
+Вкладка Conversions/Import key
+
+65. Вбрать файл id_rsa
+
+66. Кликнуть save private key
+
+67. Выбрать директорию и сохранить private key
+
+68. Открыть FileZilla
+
+69. Добавляем наш сайт
+Вкладка Файл/Менеджер Сайтов
+
+70. Нажать на кнопку новый сайт
+
+71. Протокол - SFTP SSH File
+В поле хост - ip адрес сервера
+порт - это порт который мы указывали при изменении дефолтного 22 порта сервера
+тип входа - файл с ключом
+ползователь - выбрать пользователя сервера
+указать файл с приватным ключом,который сохраняли ранее
+
+
+72. Нажать соединиться
+
+73. Появится окно. Выбрать установить соеденение в новой вкладке
+
+74. Залить несколкьо файлов для проверки на vps
+

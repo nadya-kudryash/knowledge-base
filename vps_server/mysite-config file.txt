@@ -1,0 +1,8 @@
+server {
+    listen 80.249.145.36:80;
+    root /home/boss/webapps/mysite.com;
+    index index.html;
+    location / {
+         try_files $uri.html $uri $uri/ =404;
+    }
+}

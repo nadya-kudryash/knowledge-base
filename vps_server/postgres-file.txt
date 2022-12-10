@@ -1,0 +1,15 @@
+Создание таблицы:
+
+CREATE TABLE managers (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR ( 150 ) NOT NULL,
+	email VARCHAR ( 255 ) UNIQUE NOT NULL,
+    age INTEGER NOT NULL
+  );
+
+  Вставка в таблицу:
+
+  INSERT INTO managers (name, email, age) VALUES ('John Sohman', 'john@gmail.com', 27);
+  INSERT INTO managers (name, email, age) VALUES ('Margaret Visbis', 'margaret@yahoo.com', 36);
+  INSERT INTO managers (name, email, age) VALUES ('Denis Solodov', 'denis@mail.ru', 32);
+  INSERT INTO managers (name, email, age) VALUES ('Louise Vandergoof', 'louise@gmail.com', 24);
