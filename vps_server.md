@@ -89,4 +89,67 @@ ctrl+x, y, enter
 `ssh nadya@ip`
 и кодовая фраза от ключа
 
+21. устанавливаем программы
+
+`sudo apt install nginx`
+
+22. нужно посмотреть статус
+
+`sudo systemctl status nginx`
+
+23. нажимаем ctrl+c для выхода
+24. теперь нужно сделать так, чтобы nginx загружался каждый раз при входе в систему
+
+`sudo systemctl enable nginx`
+
+25. создаем папку для приложений
+
+`cd /home/nadya`
+
+`mkdir my_apps`
+
+`cd my_apps`
+
+`mkdir test_bot`
+
+26. создаем разрешение на чтение и запись для директории my_apps
+
+`sudo chmod -R 777 /home/nadya/my_apps`
+27. идем в папку и создаем тестовый файл index.html
+
+`sudo nano index.html`
+вставляем туда разметку
+
+28. чтобы сайт обслуживался nginx, нужно добавить файл конфига
+
+`sudo nano /etc/nginx/sites-available/test_bot`
+
+29. и вставляем туда это:
+
+server {
+        listen 111.222.333:80;
+        root /home/nadya/my_apps/test_bot;
+        index index.html;
+        location / {
+                  try_files $uri.html $uri $uri/ =404;
+                  }
+       }
+       
+30. дальше нужно активировать этот файл, чтобы nginx знал о нем
+
+`sudo ln /etc/nginx/sites-available/test_bot /etc/nginx/sites-enabled/test_bot`
+
+31. проверка что файл успешно активировался
+
+`sudo nginx -t`
+
+32. перезапускаем службу nginx
+
+`sudo systemctl restart nginx`
+
+33. проверяем статус nginx
+
+`sudo systemctl status nginx`
+
+34. ctrl+c
 
