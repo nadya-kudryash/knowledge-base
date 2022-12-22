@@ -1,3 +1,6 @@
+https://github.com/BaggerFast/ItManuals/blob/main/markdown/deploy_tg_bot.md
+
+
 `ssh root@ip`
 `yes`
 вводим пароль
