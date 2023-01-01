@@ -150,4 +150,29 @@ views.py:
 
 7. Теперь правим вид страницы. Идем в my_app/views.py
 
-а дальше все в файлах проекта
+прописываем 
+`from django.views.generic import ListView, TemplateView`
+
+`from .models import Post`
+
+и пишем вьюху:
+
+class HomePageView(ListView):
+    model = Post
+    template_name = "home.html"
+    
+8. Идем в my_app/urls.py
+
+импортируем наш homepageview:
+
+`from .views import HomePageBiew`
+
+и добавляем путь в URLPATTERNS
+
+`path('', HomePageView.as_view(), name="home")`
+
+имя должно совпадать!!!! с названием html страницы
+
+9. и теперь создаем шаблон templates. создаем папку templates и там home.html
+10. 
+
